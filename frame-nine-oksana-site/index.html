@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Кадр за кадром — планировщик фотосерий</title>
+  <meta name="description" content="Приватная мастерская для подготовки девяти согласованных кадров по референсам человека, локации и одежды.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="theme-color" content="#f6f5f1">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234c4be5'/%3E%3Cpath d='M8 13V8h5m6 0h5v5m0 6v5h-5m-6 0H8v-5' fill='none' stroke='white' stroke-width='2'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="./style.css?v=1.2.0"><script type="module" src="./app.js?v=1.2.0"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="./" aria-label="Кадр за кадром, главная"><span class="brand-icon" aria-hidden="true">⌗</span><span>Кадр за кадром<small>МАСТЕРСКАЯ ФОТОСЕРИЙ</small></span></a>
+    <div class="header-right"><span class="privacy"><span data-icon="lock"></span>Приватный проект</span><span class="save-status" id="saveStatus" role="status">Загрузка…</span><button class="button light" id="exportProject"><span data-icon="download"></span><span class="wide-label">Сохранить проект</span></button></div>
+  </header>
+  <div class="workspace">
+    <aside class="source-panel" aria-label="Референсы серии">
+      <div class="section-kicker">01 / ОСНОВА СЕРИИ</div>
+      <h2>Ваши референсы</h2><p class="muted small">Человек. Локация. Ваш образ.</p>
+      <div class="reference" id="personRef"></div>
+      <div class="reference" id="locationRef"></div>
+      <div class="reference" id="clothingRef"></div><p class="ref-clothing-help">Одежда — по желанию. Внешность всегда берём с первого фото.</p>
+      <div class="source-note"><span data-icon="shield"></span><p>Фотографии и настройки сохраняются в этом браузере. Для переноса используйте файл проекта.</p></div>
+      <button class="button full light" id="settingsButton"><span data-icon="sliders"></span>Настройки серии</button>
+      <div class="continuity-card"><span class="mini-label">ПОСТОЯННО ВО ВСЕХ КАДРАХ</span><div><span data-icon="check"></span>Внешность и возраст</div><div><span data-icon="check"></span>Геометрия пространства</div><div><span data-icon="check"></span>Свет и цветовая палитра</div><p id="outfitSummary"></p></div>
+      <div class="sidebar-bottom"><label class="text-button import-file-label" id="importButton"><input class="native-file-picker" type="file" id="projectInput" accept=".json,application/json" aria-label="Открыть файл проекта"><span data-icon="upload"></span>Открыть файл проекта</label><span class="version">СТУДИЯ / ВЕРСИЯ 1.2</span></div>
+    </aside>
+    <main>
+      <div class="story-heading"><div><div class="section-kicker">02 / РАСКАДРОВКА</div><h1>Девять кадров.<br><span>Одна история.</span></h1><p class="muted intro">Продумайте серию целиком — и каждый кадр в деталях.</p></div><div class="series-stamp"><strong>9</strong><span>КАДРОВ<br>В ВАШЕЙ СЕРИИ</span></div></div>
+      <div class="board-toolbar"><div><h2 id="projectTitle">Городская история</h2><span class="board-description" id="boardDescription">9 кадров · 3:4 · единый образ</span></div><div class="toolbar-actions"><button class="button light compact" id="allPrompts"><span data-icon="layers"></span>Все промпты</button></div></div>
+      <div class="readiness" id="readiness"></div>
+      <div class="storyboard" id="storyboard" aria-label="Раскадровка из девяти кадров"></div>
+      <div class="board-footer"><span><span class="legend-dot"></span>Схемы композиции — для планирования</span><span>Выберите кадр, чтобы изменить его →</span></div>
+    </main>
+    <aside class="inspector" aria-label="Настройки выбранного кадра" id="inspector"></aside>
+  </div>
+  <dialog id="settingsDialog"><form id="settingsForm"><div class="dialog-heading"><div><div class="section-kicker">ОБЩЕЕ ДЛЯ ДЕВЯТИ КАДРОВ</div><h2>Основа Вашей истории</h2></div><button type="button" class="icon-button" data-close="settingsDialog" aria-label="Закрыть">×</button></div><div id="settingsFields"></div><div class="dialog-footer"><button type="button" class="text-button" data-close="settingsDialog">Отмена</button><button type="submit" class="button primary">Применить к серии</button></div></form></dialog>
+  <dialog id="promptDialog" class="prompt-dialog"><div class="dialog-heading"><div><div class="section-kicker" id="promptKicker">ГОТОВО К ГЕНЕРАЦИИ</div><h2 id="promptTitle">Промпт кадра</h2></div><button class="icon-button" data-close="promptDialog" aria-label="Закрыть">×</button></div><p class="prompt-help">В сервисе генерации приложите фото человека как референс 1, фото локации как референс 2. Планировщик составляет промпты; фотографии создаются в выбранной Вами нейросети.</p><textarea id="promptText" readonly aria-label="Готовый промпт"></textarea><div class="dialog-footer"><button class="button light" id="downloadPrompts"><span data-icon="download"></span>Скачать .txt</button><button class="button primary" id="copyPrompts"><span data-icon="copy"></span>Копировать</button></div></dialog>
+  <dialog id="confirmDialog" class="confirm-dialog"><div class="dialog-heading"><h2>Открыть другой проект?</h2><button class="icon-button" data-close="confirmDialog" aria-label="Закрыть">×</button></div><p>Текущая серия будет заменена. Сначала сохраните её файлом, если хотите вернуться к ней.</p><div class="dialog-footer"><button class="button light" data-close="confirmDialog">Отмена</button><button class="button primary" id="confirmImport">Открыть проект</button></div></dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
